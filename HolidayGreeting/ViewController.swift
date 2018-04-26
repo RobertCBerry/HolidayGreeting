@@ -10,9 +10,17 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    // MARK: Properties
+    
     @IBOutlet var backgroundView: UIView!
     
     @IBOutlet weak var holidayGreetingLabel: UILabel!
+    
+    @IBOutlet weak var holidayGreetingButtonCenterX: NSLayoutConstraint!
+    
+    @IBOutlet weak var holidayGreetingLabelTopConstraint: NSLayoutConstraint!
+   
+    // MARK: Action Methods
     
     @IBAction func holidayGreetingButtonTapped(_ sender: HolidayGreetingButton) {
         
@@ -68,18 +76,74 @@ class ViewController: UIViewController {
         default:
             backgroundView.backgroundColor = .magenta
         }
+        
+        // The holidayGreetingLabel will bounce up and down each time the HolidayGreetingButton is tapped.
+        
+        UIView.animateKeyframes(withDuration: 0.5, delay: 0, options: [.calculationModeCubic], animations: {
+            
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.3, animations: {
+                
+                self.holidayGreetingLabelTopConstraint.constant = 90
+                
+                // Lays out the subviews immediately, if layout updates are pending.
+                
+                self.view.layoutIfNeeded()
+                
+            })
+            
+            UIView.addKeyframe(withRelativeStartTime: 0.3, relativeDuration: 0.4, animations: {
+                
+                self.holidayGreetingLabelTopConstraint.constant = 70
+                
+                // Lays out the subviews immediately, if layout updates are pending.
+                
+                self.view.layoutIfNeeded()
+                
+            })
+            
+            UIView.addKeyframe(withRelativeStartTime: 0.7, relativeDuration: 0.3, animations: {
+                
+                self.holidayGreetingLabelTopConstraint.constant = 50
+                
+                // Lays out the subviews immediately, if layout updates are pending.
+                
+                self.view.layoutIfNeeded()
+                
+            })
+            
+        }, completion: nil)
     }
+    
+    // MARK: View Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         backgroundView.backgroundColor = .magenta 
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    // Method makes the holiday greeting button slide in from the left.
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        // The holiday greeting button will be on the left side of the screen upon app launch.
+        
+        holidayGreetingButtonCenterX.constant = -view.bounds.width
     }
-
-
+    
+    // Method makes the holiday greeting button center when the app has started.
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        
+        UIView.animate(withDuration: 1, delay: 1, usingSpringWithDamping: 0.5, initialSpringVelocity: 15, options: [], animations: {
+            
+            self.holidayGreetingButtonCenterX.constant += self.view.bounds.width
+            
+            // Lays out the subviews immediately, if layout updates are pending.
+            
+            self.view.layoutIfNeeded()
+            
+        }, completion: nil)
+    }
 }
 
